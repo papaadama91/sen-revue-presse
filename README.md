@@ -1,7 +1,5 @@
 # Générateur de Revue de Presse Thématique avec Synthèse Vocale
 
-# 📰 SEN Revue de Presse – Générateur intelligent avec script vocal
-
 **SEN Revue de Presse** est une application Streamlit qui :
 - 📥 Accepte fichiers presse (PDF, Word, texte, images)
 - 🧠 Résume automatiquement les contenus avec IA
