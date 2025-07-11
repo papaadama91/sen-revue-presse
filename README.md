@@ -1,63 +1,32 @@
-# Générateur de Revue de Presse Thématique avec Synthèse Vocale
+# 📰 SEN Revue de Presse – Générateur IA avec OCR, Résumé, Script Vocal
 
-**SEN Revue de Presse** est une application Streamlit qui :
+**SEN Revue de Presse** est une application Streamlit intelligente qui :
+
 - 📥 Accepte fichiers presse (PDF, Word, texte, images)
-- 🧠 Résume automatiquement les contenus avec IA
-- 🗂 Classe les articles par **thèmes** (Politique, Économie, Société…)
-- 🎙 Génère un **script voix-off** (français + wolof)
-- 🔊 Produit un fichier **audio MP3**
-- 📄 Génère un fichier Word structuré
+- 🧠 Résume automatiquement le contenu avec IA (BART)
+- 🗂 Classe les articles par **thèmes** (Politique, Économie, etc.)
+- 🌍 Génère un **script voix-off** (français + traduction wolof)
+- 🔊 Produit un **MP3 vocal** avec `gTTS`
+- 📄 Génère un fichier Word (.docx) thématique
+- 🎬 Propose un **script prêt pour vidéo YouTube**
 
 ---
 
-## 🚀 Démo (Streamlit Cloud)
+## 🚀 Démo en ligne (Streamlit Cloud)
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://sen-revue-presse.streamlit.app)
 
 ---
 
-## 📦 Installation locale
-
-### 1. Cloner le dépôt
+## 🖥️ Installation locale
 
 ```bash
 git clone https://github.com/papaadama91/sen-revue-presse.git
 cd sen-revue-presse
-2. Créer un environnement virtuel (optionnel mais recommandé)
-bash
-Copier
-Modifier
+
+# (Optionnel)
 python -m venv venv
-source venv/bin/activate      # Linux/macOS
-venv\Scripts\activate.bat     # Windows
-3. Installer les dépendances
-bash
-Copier
-Modifier
+source venv/bin/activate
+
 pip install -r requirements.txt
-Pas besoin d’installer Tesseract : l’OCR est intégré avec DocTR.
-
-4. Lancer l'application
-bash
-Copier
-Modifier
 streamlit run app.py
-📁 Formats supportés
-Type de fichier	Extensions
-Texte brut	.txt
-Word	.docx
-PDF	.pdf
-Images presse	.jpg, .png
-
-🌍 Traduction & Script Wolof
-Traduction automatique (fr ➝ wolof) avec deep-translator
-
-Script généré lisible + téléchargeable
-
-Synthèse vocale disponible en français (gTTS)
-
-🔒 Licence
-Projet open-source sous licence MIT. Utilisation libre à des fins personnelles, éducatives ou professionnelles.
-
-🙏 Contributeur principal
-👤 @papaadama91
