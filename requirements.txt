@@ -2,9 +2,10 @@ streamlit
 PyPDF2
 python-docx
 pillow
-pytesseract
 transformers
 torch
 deep-translator
 gTTS
-transformers
+doctr[torch]
+pdf2image
+PyMuPDF
