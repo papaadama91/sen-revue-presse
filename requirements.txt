@@ -6,6 +6,5 @@ transformers
 torch
 deep-translator
 gTTS
-doctr[torch]
-pdf2image
-PyMuPDF
+easyocr
+numpy
