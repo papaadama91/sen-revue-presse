@@ -1,39 +1,40 @@
 import streamlit as st
 from PyPDF2 import PdfReader
 from docx import Document as DocxDocument
+from PIL import Image
+import numpy as np
 import os
 import re
+import easyocr
 from transformers import pipeline
 from collections import defaultdict
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-from doctr.documents import DocumentFile
-from doctr.models import ocr_predictor
+
+reader = easyocr.Reader(['fr'])
 
 @st.cache_resource
 def load_summarizer():
     return pipeline("summarization", model="facebook/bart-large-cnn")
 
-@st.cache_resource
-def load_ocr_model():
-    return ocr_predictor(pretrained=True)
-
 summarizer = load_summarizer()
-ocr_model = load_ocr_model()
 
 def extract_text(file):
     ext = os.path.splitext(file.name)[-1].lower()
-    if ext in [".jpg", ".jpeg", ".png", ".pdf"]:
-        doc = DocumentFile.from_pdf(file) if ext == ".pdf" else DocumentFile.from_images(file)
-        result = ocr_model(doc)
-        return result.export()["value"]
+    if ext == ".pdf":
+        reader_pdf = PdfReader(file)
+        return "\n".join([page.extract_text() for page in reader_pdf.pages if page.extract_text()])
     elif ext == ".docx":
         doc = DocxDocument(file)
         return "\n".join([p.text for p in doc.paragraphs])
     elif ext == ".txt":
         return file.read().decode("utf-8")
+    elif ext in [".jpg", ".jpeg", ".png"]:
+        image = Image.open(file).convert("RGB")
+        results = reader.readtext(np.array(image), detail=0)
+        return "\n".join(results)
     else:
-        return ""
+        return "[Format non supporté]"
 
 def extract_metadata(text):
     title = text.strip().split("\n")[0][:80]
@@ -99,7 +100,7 @@ def generate_docx_by_theme(articles_by_theme):
     return path
 
 # Interface Streamlit
-st.title("📰 Générateur de Revue de Presse Thématique (DocTR OCR)")
+st.title("📰 Générateur de Revue de Presse Thématique (EasyOCR)")
 st.markdown("Charge tes fichiers presse ci-dessous (.pdf, .docx, .txt, .png, .jpg)")
 
 uploaded_files = st.file_uploader("Fichiers :", accept_multiple_files=True, type=["pdf", "docx", "txt", "png", "jpg", "jpeg"])
