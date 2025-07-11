@@ -10,6 +10,8 @@ from transformers import pipeline
 from collections import defaultdict
 from deep_translator import GoogleTranslator
 from gtts import gTTS
+from moviepy.editor import *
+from PIL import Image, ImageDraw, ImageFont
 
 reader = easyocr.Reader(['fr'])
 
@@ -138,3 +140,61 @@ if uploaded_files:
             with open(audio_path, "rb") as audio_file:
                 st.audio(audio_file.read(), format="audio/mp3")
                 st.download_button("📥 Télécharger MP3", audio_file, file_name="voix_off_fr.mp3")
+        if st.button("🎥 Générer vidéo YouTube (MP4)"):
+            video_path = generate_news_video_enhanced(fr_script, audio_path)
+            with open(video_path, "rb") as vid:
+                st.video(vid)
+                st.download_button("📽 Télécharger la vidéo", vid, file_name="revue_presse_video.mp4")
+
+def generate_news_video_enhanced(
+    script_text,
+    audio_path,
+    logo_path="logo_senegal.png",     # doit être placé à la racine du projet
+    music_path=None,                  # facultatif
+    output_path="revue_presse_video.mp4"
+):
+    # Durée audio
+    audio_clip = AudioFileClip(audio_path)
+    duration_audio = audio_clip.duration
+    width, height = 1280, 720
+    bg_color = (10, 10, 40)
+
+    # Créer fond d'écran
+    background = Image.new("RGB", (width, height), bg_color)
+    draw = ImageDraw.Draw(background)
+
+    # Polices
+    title_font = ImageFont.truetype("DejaVuSans-Bold.ttf", 60)
+    text_font = ImageFont.truetype("DejaVuSans.ttf", 34)
+
+    # Titre
+    draw.text((50, 30), "📰 Revue de Presse - Sénégal", font=title_font, fill="white")
+
+    # Script (80 caractères max par ligne)
+    wrapped = "\n".join(script_text[i:i+80] for i in range(0, len(script_text), 80))
+    draw.text((50, 150), wrapped, font=text_font, fill="white")
+
+    # Logo
+    try:
+        logo = Image.open(logo_path).resize((100, 100)).convert("RGBA")
+        background.paste(logo, (width - 140, 40), logo)
+    except Exception as e:
+        print(f"Aucun logo trouvé ({e}), on continue sans.")
+
+    # Enregistrer image
+    img_path = "fond_temp.jpg"
+    background.save(img_path)
+
+    # Créer clip
+    clip = ImageClip(img_path).set_duration(duration_audio)
+    clip = clip.set_audio(audio_clip)
+
+    # Ajouter musique douce si fournie
+    if music_path and os.path.exists(music_path):
+        music = AudioFileClip(music_path).volumex(0.1)
+        final_audio = CompositeAudioClip([audio_clip.volumex(1.0), music.set_duration(duration_audio)])
+        clip = clip.set_audio(final_audio)
+
+    # Export
+    clip.write_videofile(output_path, fps=24)
+    return output_path
