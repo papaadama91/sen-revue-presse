@@ -10,7 +10,6 @@ from transformers import pipeline
 from collections import defaultdict
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-from moviepy.editor import *
 from PIL import Image, ImageDraw, ImageFont
 
 reader = easyocr.Reader(['fr'])
