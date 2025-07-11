@@ -7,7 +7,6 @@ from transformers import pipeline
 from collections import defaultdict
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-from doctr.io import DocumentFile
 from doctr.documents import DocumentFile
 from doctr.models import ocr_predictor
 
