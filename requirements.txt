@@ -7,6 +7,5 @@ torch
 deep-translator
 gTTS
 doctr[torch]
-doctr
 pdf2image
 PyMuPDF
